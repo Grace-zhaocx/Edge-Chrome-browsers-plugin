@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>创建插件图标</title>
+</head>
+<body>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    <canvas id="canvas48" width="48" height="48"></canvas>
+    <canvas id="canvas128" width="128" height="128"></canvas>
+
+    <script>
+        function createIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            
+            // 背景
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(0, 0, size, size);
+            
+            // 圆角
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.15);
+            ctx.fill();
+            
+            ctx.globalCompositeOperation = 'source-over';
+            
+            // 书签图标
+            ctx.fillStyle = '#ffffff';
+            const margin = size * 0.2;
+            const bookmarkWidth = size * 0.6;
+            const bookmarkHeight = size * 0.6;
+            const x = (size - bookmarkWidth) / 2;
+            const y = margin;
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + bookmarkWidth, y);
+            ctx.lineTo(x + bookmarkWidth, y + bookmarkHeight);
+            ctx.lineTo(x + bookmarkWidth / 2, y + bookmarkHeight * 0.8);
+            ctx.lineTo(x, y + bookmarkHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 下载图标
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon-${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // 创建所有尺寸的图标
+        setTimeout(() => {
+            createIcon(16);
+            setTimeout(() => createIcon(32), 100);
+            setTimeout(() => createIcon(48), 200);
+            setTimeout(() => createIcon(128), 300);
+        }, 100);
+    </script>
+</body>
+</html>

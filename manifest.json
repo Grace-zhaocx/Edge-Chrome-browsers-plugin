@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "飞书知识收藏插件",
+  "version": "1.0.0",
+  "description": "一键收藏网页文章信息并同步到飞书多维表格（支持Chrome和Edge浏览器）",
+  "minimum_chrome_version": "88",
+  
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabs",
+    "alarms",
+    "background"
+  ],
+  
+  "host_permissions": [
+    "https://open.feishu.cn/*",
+    "https://*.feishu.cn/*",
+    "https://*.larksuite.com/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "收藏到飞书"
+  },
+  
+  "options_page": "options/options.html",
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收藏到飞书</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>收藏到飞书</h1>
+      <div class="status-indicator" id="statusIndicator"></div>
+    </header>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <span>正在获取页面信息...</span>
+    </div>
+
+    <div class="form-container" id="formContainer" style="display: none;">
+      <form id="bookmarkForm">
+        <div class="form-group">
+          <label for="title">网站标题</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="url">网站地址</label>
+          <input type="url" id="url" name="url" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="description">网站说明</label>
+          <textarea id="description" name="description" placeholder="请输入网站的简短说明..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">网站备注</label>
+          <textarea id="notes" name="notes" placeholder="补充信息或个人心得..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">网站标签</label>
+          <div class="tags-container">
+            <div class="tags-input-wrapper">
+              <input type="text" id="tagInput" placeholder="输入标签后按回车添加，或从下方选择">
+              <div class="tags-list" id="tagsList"></div>
+            </div>
+            <div class="suggested-tags" id="suggestedTags" style="margin-top: 8px; display: none;">
+              <div class="suggested-tags-label" style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">预置标签：</div>
+              <div class="suggested-tags-list" id="suggestedTagsList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="summaryGroup" style="display: none;">
+          <label for="summary">页面摘要</label>
+          <textarea id="summary" name="summary" readonly></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="cancelBtn" class="btn-secondary">取消</button>
+          <button type="submit" id="saveBtn" class="btn-primary">
+            <span class="btn-text">保存收藏</span>
+            <span class="btn-spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </form>
+
+      <div class="duplicate-warning" id="duplicateWarning" style="display: none;">
+        <div class="warning-content">
+          <span class="warning-icon">⚠️</span>
+          <span class="warning-text">此页面已收藏过，是否更新？</span>
+        </div>
+        <div class="warning-actions">
+          <button type="button" id="updateBtn" class="btn-warning">更新</button>
+          <button type="button" id="skipBtn" class="btn-secondary">跳过</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-container" id="resultContainer" style="display: none;">
+      <div class="result-success" id="resultSuccess" style="display: none;">
+        <div class="success-icon">✅</div>
+        <h3>收藏成功！</h3>
+        <p>已成功保存到飞书多维表格</p>
+        <button type="button" id="viewTableBtn" class="btn-link">查看表格</button>
+      </div>
+
+      <div class="result-error" id="resultError" style="display: none;">
+        <div class="error-icon">❌</div>
+        <h3>收藏失败</h3>
+        <p id="errorMessage">请检查网络连接或配置信息</p>
+        <div class="error-actions">
+          <button type="button" id="retryBtn" class="btn-primary">重试</button>
+          <button type="button" id="settingsBtn" class="btn-secondary">设置</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button type="button" id="settingsLink" class="link-button">插件设置</button>
+      <button type="button" id="testApiBtn" class="link-button" style="margin-left: 10px;">测试API</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

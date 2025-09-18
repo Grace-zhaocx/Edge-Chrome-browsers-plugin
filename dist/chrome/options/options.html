@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飞书知识收藏插件 - 设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <h1>飞书知识收藏插件</h1>
+          <span class="version">v1.0.0</span>
+        </div>
+        <div class="header-actions">
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <button type="button" class="nav-tab active" data-tab="basic">基础配置</button>
+        <button type="button" class="nav-tab" data-tab="advanced">高级设置</button>
+        <button type="button" class="nav-tab" data-tab="history">历史记录</button>
+        <button type="button" class="nav-tab" data-tab="about">关于</button>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <!-- 基础配置 -->
+      <div id="basicTab" class="tab-content active">
+        <section class="config-section">
+          <h2>飞书应用配置</h2>
+          <p class="section-desc">配置飞书开放平台应用信息，用于访问多维表格API</p>
+          
+          <div class="info-banner" style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="color: #f59e0b; font-size: 18px;">⚠️</span>
+              <div>
+                <strong style="color: #92400e;">需要配置飞书应用</strong>
+                <p style="margin: 4px 0 0 0; color: #b45309; font-size: 14px;">
+                  请在<a href="https://open.feishu.cn/app" target="_blank" style="color: #3b82f6;">飞书开放平台</a>创建应用，获取App ID和App Secret，并创建多维表格后填写相关配置。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <form id="configForm">
+            <div class="form-group">
+              <label for="appId">应用ID (App ID) <span class="required">*</span></label>
+              <input type="text" id="appId" name="appId" placeholder="cli_xxxxxxxxxx" required>
+              <small class="form-help">
+                在<a href="https://open.feishu.cn/app" target="_blank">飞书开放平台</a>创建应用后获得，格式如: cli_a8de0f42f020101c
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label for="appSecret">应用密钥 (App Secret) <span class="required">*</span></label>
+              <div class="input-group">
+                <input type="password" id="appSecret" name="appSecret" placeholder="应用密钥" required>
+                <button type="button" id="toggleSecret" class="toggle-password">👁️</button>
+              </div>
+              <small class="form-help">
+                应用的访问密钥，请妥善保管
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label for="baseId">多维表格ID (app_token) <span class="required">*</span></label>
+              <input type="text" id="baseId" name="baseId" placeholder="多维表格的app_token" required>
+              <small class="form-help">
+                请查看<a href="https://open.feishu.cn/document/server-docs/docs/bitable-v1/app/get" target="_blank">飞书官方文档</a>，根据多维表格的地址不同，获取到不同的多维表格app_token
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label for="tableId">数据表ID (table_id) <span class="required">*</span></label>
+              <input type="text" id="tableId" name="tableId" placeholder="tblxxxxxxxxxx" required>
+              <small class="form-help">
+                多维表格中具体数据表的table_id，格式如: tblQWm4ttkQD7QH0，可通过<a href="https://open.feishu.cn/document/server-docs/docs/bitable-v1/app-table/list" target="_blank">获取数据表API</a>查询
+              </small>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="testConnection" class="btn-secondary">测试连接</button>
+              <button type="submit" class="btn-primary">保存配置</button>
+            </div>
+          </form>
+
+          <div class="connection-status" id="connectionStatus" style="display: none;">
+            <div class="status-indicator"></div>
+            <span class="status-text"></span>
+          </div>
+        </section>
+
+        <section class="config-section">
+          <h2>表格字段映射</h2>
+          <p class="section-desc">配置插件数据与飞书表格字段的对应关系</p>
+          
+          <div class="field-mapping" id="fieldMapping">
+            <div class="mapping-item">
+              <label>网站地址</label>
+              <select name="urlField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+            <div class="mapping-item">
+              <label>网站标题</label>
+              <select name="titleField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+            <div class="mapping-item">
+              <label>网站说明</label>
+              <select name="descField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+            <div class="mapping-item">
+              <label>网站备注</label>
+              <select name="notesField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+            <div class="mapping-item">
+              <label>网站标签</label>
+              <select name="tagsField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+            <div class="mapping-item">
+              <label>页面摘要</label>
+              <select name="summaryField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+            <div class="mapping-item">
+              <label>创建时间</label>
+              <select name="timeField">
+                <option value="">自动检测</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" id="refreshFields" class="btn-secondary">刷新字段列表</button>
+        </section>
+      </div>
+
+      <!-- 高级设置 -->
+      <div id="advancedTab" class="tab-content">
+        <section class="config-section">
+          <h2>收藏设置</h2>
+          
+          <div class="form-group">
+            <label for="defaultTags">默认标签</label>
+            <div class="tags-input-container">
+              <input type="text" id="defaultTagInput" placeholder="输入标签后按回车添加">
+              <div class="default-tags" id="defaultTags"></div>
+            </div>
+            <small class="form-help">为新收藏的内容自动添加这些标签</small>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="autoFillDescription">
+                <span class="checkmark"></span>
+                自动填充描述信息
+              </label>
+              <small class="form-help">从页面meta信息自动提取描述</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="enableNotifications">
+                <span class="checkmark"></span>
+                启用通知提醒
+              </label>
+              <small class="form-help">收藏成功或失败时显示系统通知</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="duplicateCheck">
+                <span class="checkmark"></span>
+                重复内容检测
+              </label>
+              <small class="form-help">收藏前检查是否已存在相同URL</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="maxRetries">最大重试次数</label>
+            <select id="maxRetries">
+              <option value="1">1次</option>
+              <option value="2">2次</option>
+              <option value="3" selected>3次</option>
+              <option value="5">5次</option>
+            </select>
+            <small class="form-help">网络错误时的重试次数</small>
+          </div>
+        </section>
+
+        <section class="config-section">
+          <h2>快捷键设置</h2>
+          
+          <div class="shortcut-item">
+            <label>快速收藏</label>
+            <div class="shortcut-display">
+              <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+            </div>
+            <button type="button" class="btn-link">修改</button>
+          </div>
+          
+          <div class="shortcut-item">
+            <label>打开设置</label>
+            <div class="shortcut-display">
+              <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>
+            </div>
+            <button type="button" class="btn-link">修改</button>
+          </div>
+        </section>
+
+        <section class="config-section">
+          <h2>数据管理</h2>
+          
+          <div class="data-stats" id="dataStats">
+            <div class="stat-item">
+              <span class="stat-label">总收藏数</span>
+              <span class="stat-value" id="totalBookmarks">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">今日收藏</span>
+              <span class="stat-value" id="todayBookmarks">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">存储使用</span>
+              <span class="stat-value" id="storageUsage">0%</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="clearCache" class="btn-warning">清理缓存</button>
+            <button type="button" id="clearHistory" class="btn-danger">清空历史</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- 历史记录 -->
+      <div id="historyTab" class="tab-content">
+        <section class="config-section">
+          <div class="section-header">
+            <h2>收藏历史</h2>
+            <div class="section-actions">
+              <input type="search" id="historySearch" placeholder="搜索历史记录...">
+              <button type="button" id="exportFilteredHistory" class="btn-secondary">导出当前结果</button>
+              <button type="button" id="exportAllHistory" class="btn-secondary">导出全部</button>
+            </div>
+          </div>
+
+          <div class="history-filters">
+            <select id="timeFilter">
+              <option value="all">全部时间</option>
+              <option value="today">今天</option>
+              <option value="week">本周</option>
+              <option value="month">本月</option>
+            </select>
+            <select id="tagFilter">
+              <option value="all">全部标签</option>
+            </select>
+          </div>
+
+          <div class="history-list" id="historyList">
+            <div class="loading-placeholder">
+              <div class="spinner"></div>
+              <p>加载历史记录中...</p>
+            </div>
+          </div>
+
+          <div class="pagination" id="historyPagination" style="display: none;">
+            <button type="button" id="prevPage" class="page-btn">上一页</button>
+            <span class="page-info">
+              第 <span id="currentPage">1</span> 页，共 <span id="totalPages">1</span> 页
+            </span>
+            <button type="button" id="nextPage" class="page-btn">下一页</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- 关于 -->
+      <div id="aboutTab" class="tab-content">
+        <section class="config-section">
+          <h2>关于插件</h2>
+          
+          <div class="about-content">
+            <div class="plugin-info">
+              <h3>飞书知识收藏插件</h3>
+              <p>版本: <strong>1.0.0</strong></p>
+              <p>一键收藏网页文章信息并同步到飞书多维表格，方便后续统一管理和查阅。</p>
+            </div>
+
+            <div class="feature-list">
+              <h4>主要功能</h4>
+              <ul>
+                <li>一键收藏当前网页信息</li>
+                <li>自动提取页面标题、URL、描述等</li>
+                <li>支持自定义标签和备注</li>
+                <li>同步到飞书多维表格</li>
+                <li>重复内容检测</li>
+                <li>离线缓存支持</li>
+              </ul>
+            </div>
+
+            <div class="help-links">
+              <h4>帮助与支持</h4>
+              <a href="#" class="help-link">使用教程</a>
+              <a href="#" class="help-link">常见问题</a>
+              <a href="#" class="help-link">反馈建议</a>
+              <a href="#" class="help-link">隐私政策</a>
+            </div>
+
+            <div class="developer-info">
+              <p class="copyright">© 2024 飞书知识收藏插件. 保留所有权利.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+
+  <script src="options-simple.js"></script>
+</body>
+</html>

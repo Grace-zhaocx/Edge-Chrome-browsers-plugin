@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>生成插件图标</title>
+</head>
+<body>
+    <h2>插件图标生成器</h2>
+    <p>点击下面的按钮生成图标文件：</p>
+    
+    <canvas id="canvas" width="128" height="128" style="border: 1px solid #ccc;"></canvas><br><br>
+    
+    <button onclick="generateIcons()">生成所有图标</button>
+    <div id="download-links"></div>
+
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+            
+            // 清除画布
+            ctx.clearRect(0, 0, size, size);
+            
+            // 绘制蓝色背景
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(0, 0, size, size);
+            
+            // 绘制白色书签形状
+            ctx.fillStyle = '#ffffff';
+            const margin = size * 0.2;
+            const bookmarkWidth = size * 0.6;
+            const bookmarkHeight = size * 0.65;
+            const x = (size - bookmarkWidth) / 2;
+            const y = margin;
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + bookmarkWidth, y);
+            ctx.lineTo(x + bookmarkWidth, y + bookmarkHeight);
+            ctx.lineTo(x + bookmarkWidth / 2, y + bookmarkHeight * 0.85);
+            ctx.lineTo(x, y + bookmarkHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        function downloadIcon(dataUrl, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = dataUrl;
+            link.textContent = `下载 ${filename}`;
+            link.style.display = 'block';
+            link.style.margin = '5px 0';
+            document.getElementById('download-links').appendChild(link);
+        }
+        
+        function generateIcons() {
+            const canvas = document.getElementById('canvas');
+            const sizes = [16, 32, 48, 128];
+            
+            document.getElementById('download-links').innerHTML = '';
+            
+            sizes.forEach(size => {
+                const dataUrl = drawIcon(canvas, size);
+                downloadIcon(dataUrl, `icon-${size}.png`);
+            });
+            
+            // 显示128x128预览
+            drawIcon(canvas, 128);
+        }
+        
+        // 页面加载时生成预览
+        window.onload = function() {
+            const canvas = document.getElementById('canvas');
+            drawIcon(canvas, 128);
+        };
+    </script>
+</body>
+</html>
