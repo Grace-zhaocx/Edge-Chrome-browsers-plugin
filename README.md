@@ -105,10 +105,10 @@ feishu-browsers-plugin/
 
 | 配置项 | 说明 | 示例 |
 |--------|------|------|
-| App ID | 飞书应用ID | cli_a8de0f42f020101c |
-| App Secret | 飞书应用密钥 | xgzYDKAkxPTZaeL9VXuDKh4rMA1SvLB4 |
-| Base ID | 多维表格ID | U2GobH43xaSwFlsN92ZcgDF6nYe |
-| Table ID | 数据表ID | tblQWm4ttkQD7QH0 |
+| App ID | 飞书应用ID | cli_***************** |
+| App Secret | 飞书应用密钥 | ******************************** |
+| Base ID | 多维表格ID | *************************** |
+| Table ID | 数据表ID | **************** |
 
 ### 高级设置
 
