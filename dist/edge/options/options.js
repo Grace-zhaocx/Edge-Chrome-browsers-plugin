@@ -41,6 +41,7 @@ class OptionsPage {
     // 默认标签
     const tagInput = document.getElementById('defaultTagInput');
     tagInput.addEventListener('keypress', this.handleTagInput.bind(this));
+    document.getElementById('saveDefaultTags').addEventListener('click', this.saveDefaultTags.bind(this));
 
     // 高级设置
     document.getElementById('autoFillDescription').addEventListener('change', this.saveAdvancedSettings.bind(this));
@@ -373,12 +374,12 @@ class OptionsPage {
       event.preventDefault();
       const input = event.target;
       const tag = input.value.trim();
-      
+
       if (tag && !this.defaultTags.has(tag)) {
         this.defaultTags.add(tag);
         this.renderDefaultTags();
         input.value = '';
-        this.saveAdvancedSettings();
+        // 移除自动保存，让用户手动点击保存按钮
       }
     }
   }
@@ -398,11 +399,52 @@ class OptionsPage {
       tagElement.querySelector('.tag-remove').addEventListener('click', (e) => {
         this.defaultTags.delete(e.target.dataset.tag);
         this.renderDefaultTags();
-        this.saveAdvancedSettings();
+        // 移除自动保存，让用户手动点击保存按钮
       });
       
       container.appendChild(tagElement);
     });
+  }
+
+  async saveDefaultTags() {
+    try {
+      const saveBtn = document.getElementById('saveDefaultTags');
+      const statusDiv = document.getElementById('defaultTagsStatus');
+
+      // 按钮状态变化
+      saveBtn.disabled = true;
+      saveBtn.textContent = '保存中...';
+
+      const config = await StorageManager.getConfig();
+      config.defaultTags = Array.from(this.defaultTags);
+      await StorageManager.saveConfig(config);
+
+      // 显示成功状态
+      statusDiv.textContent = '✅ 保存成功';
+      statusDiv.style.display = 'inline-block';
+      statusDiv.style.color = '#10b981';
+
+      // 2秒后隐藏状态
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 2000);
+
+    } catch (error) {
+      console.error('保存默认标签失败:', error);
+      const statusDiv = document.getElementById('defaultTagsStatus');
+      statusDiv.textContent = '❌ 保存失败';
+      statusDiv.style.display = 'inline-block';
+      statusDiv.style.color = '#ef4444';
+
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 3000);
+    } finally {
+      // 恢复按钮状态
+      const saveBtn = document.getElementById('saveDefaultTags');
+      saveBtn.disabled = false;
+      saveBtn.textContent = '保存默认标签';
+    }
   }
 
   async saveAdvancedSettings() {

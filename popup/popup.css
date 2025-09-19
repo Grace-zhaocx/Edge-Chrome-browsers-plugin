@@ -375,3 +375,28 @@ body {
   border-color: #f59e0b;
   color: #92400e;
 }
+
+/* 关闭按钮样式 */
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.result-container {
+  position: relative;
+}

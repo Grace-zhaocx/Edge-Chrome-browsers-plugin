@@ -61,12 +61,12 @@ class BookmarkPopup {
   bindEvents() {
     // 表单提交
     document.getElementById('bookmarkForm').addEventListener('submit', this.handleSave.bind(this));
-    
+
     // 标签输入
     const tagInput = document.getElementById('tagInput');
     tagInput.addEventListener('keypress', this.handleTagInput.bind(this));
     tagInput.addEventListener('input', this.handleTagInputChange.bind(this));
-    
+
     // 按钮事件
     document.getElementById('cancelBtn').addEventListener('click', this.handleCancel.bind(this));
     document.getElementById('updateBtn').addEventListener('click', this.handleUpdate.bind(this));
@@ -75,6 +75,7 @@ class BookmarkPopup {
     document.getElementById('settingsBtn').addEventListener('click', this.openSettings.bind(this));
     document.getElementById('settingsLink').addEventListener('click', this.openSettings.bind(this));
     document.getElementById('testApiBtn').addEventListener('click', this.testApiConnection.bind(this));
+    document.getElementById('closeSuccessBtn').addEventListener('click', this.handleCloseSuccess.bind(this));
   }
 
   async loadCurrentPageInfo() {
@@ -412,7 +413,6 @@ class BookmarkPopup {
             requestBody: { fields: record }
           });
           
-          console.log('⚠️ 请确认 tableId 对应的是"网站收藏数据表"');
 
           const response = await browserAPI.runtime.sendMessage({
             type: 'FEISHU_API_CALL',
@@ -427,7 +427,7 @@ class BookmarkPopup {
           console.log('收到飞书API响应:', response);
 
           // 详细的错误处理
-          if (response?.error || response?.data?.code !== 0) {
+          if (response?.error || (response?.data?.code && response.data.code !== 0)) {
             const errorCode = response?.data?.code || 'unknown';
             const errorMsg = response?.data?.msg || response?.error || '未知错误';
 
@@ -648,6 +648,7 @@ class BookmarkPopup {
     
     // 更新成功消息
     successContainer.innerHTML = `
+      <button type="button" id="closeSuccessBtn" class="close-btn">×</button>
       <div class="success-icon">✅</div>
       <h3>收藏成功！</h3>
       <p>${message}</p>
@@ -663,6 +664,12 @@ class BookmarkPopup {
         const url = browserAPI.runtime.getURL('options/options.html#history');
         browserAPI.tabs.create({ url });
       });
+    }
+
+    // 重新绑定关闭按钮事件
+    const closeBtn = document.getElementById('closeSuccessBtn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => window.close());
     }
     
     // 调试期间：暂时禁用自动关闭，方便查看日志
@@ -680,6 +687,10 @@ class BookmarkPopup {
   }
 
   handleCancel() {
+    window.close();
+  }
+
+  handleCloseSuccess() {
     window.close();
   }
 
@@ -770,6 +781,7 @@ class BookmarkPopup {
     try {
       const config = await StorageManager.getConfig();
       this.defaultTags = new Set(config.defaultTags || []);
+      console.log('🏷️ 加载默认标签:', Array.from(this.defaultTags));
       this.renderSuggestedTags();
     } catch (error) {
       console.error('加载默认标签失败:', error);
