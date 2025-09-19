@@ -102,17 +102,17 @@ class OptionsPage {
       
       // 设置实际值（用于保存）
       const actualValues = {
-        appId: config.appId || 'cli_a8de0f42f020101c',
-        appSecret: config.appSecret || 'xgzYDKAkxPTZaeL9VXuDKh4rMA1SvLB4',
-        baseId: config.baseId || 'U2GobH43xaSwFlsN92ZcgDF6nYe',
-        tableId: config.tableId || 'tblQWm4ttkQD7QH0'
+        appId: config.appId || '',
+        appSecret: config.appSecret || '',
+        baseId: config.baseId || '',
+        tableId: config.tableId || ''
       };
       
       // 显示带*号的值（用户友好显示）
-      appIdField.value = config.appId || 'cli_***************01c';
-      appSecretField.value = config.appSecret || '***************************LB4';
-      baseIdField.value = config.baseId || 'U2G*********************6nYe';
-      tableIdField.value = config.tableId || 'tbl***************7QH0';
+      appIdField.value = config.appId || '';
+      appSecretField.value = config.appSecret || '';
+      baseIdField.value = config.baseId || '';
+      tableIdField.value = config.tableId || '';
       
       // 存储实际值到data属性中
       appIdField.dataset.actualValue = actualValues.appId;
