@@ -200,6 +200,7 @@ class BookmarkPopup {
           method: 'POST',
           body: {
             filter: {
+              conjunction: 'and',
               conditions: [{
                 field_name: '网站地址',
                 operator: 'is',
@@ -525,11 +526,8 @@ class BookmarkPopup {
       
       // 处理不同类型的字段
       if (key === '网站地址') {
-        // URL字段需要特殊格式 (type 15)
-        formatted[key] = {
-          link: value,
-          text: value
-        };
+        // URL字段直接使用字符串格式
+        formatted[key] = value;
       } else if (key === '网站标签') {
         // 多选字段，直接发送数组
         if (Array.isArray(value)) {
