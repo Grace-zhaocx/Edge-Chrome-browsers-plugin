@@ -74,7 +74,6 @@ class BookmarkPopup {
     document.getElementById('retryBtn').addEventListener('click', this.handleRetry.bind(this));
     document.getElementById('settingsBtn').addEventListener('click', this.openSettings.bind(this));
     document.getElementById('settingsLink').addEventListener('click', this.openSettings.bind(this));
-    document.getElementById('viewTableBtn').addEventListener('click', this.openFeishuTable.bind(this));
     document.getElementById('testApiBtn').addEventListener('click', this.testApiConnection.bind(this));
   }
 
@@ -435,8 +434,7 @@ class BookmarkPopup {
           if (response?.success !== false && !response?.error) {
             console.log('✅ 数据成功写入飞书表格！');
             // 飞书API保存成功
-            const feishuUrl = 'https://x6upmg45zs.feishu.cn/wiki/H5xQwaTxDiDE6SkUulZcRgOoneh?table=tblQWm4ttkQD7QH0&view=vewiTYyjNc';
-            this.showSuccessWithLink('已同步到飞书多维表格', feishuUrl);
+            this.showSuccess('已同步到飞书多维表格');
           } else {
             console.error('❌ 飞书API调用虽然有响应，但可能失败:', response);
             throw new Error(response?.error || '未知的API响应错误');
@@ -446,8 +444,7 @@ class BookmarkPopup {
           console.warn('飞书API保存失败，改为本地保存:', apiError);
           // API失败时降级到本地保存
           await this.saveToLocal(formData);
-          const feishuUrl = 'https://x6upmg45zs.feishu.cn/wiki/H5xQwaTxDiDE6SkUulZcRgOoneh?table=tblQWm4ttkQD7QH0&view=vewiTYyjNc';
-          this.showSuccessWithLink('已保存到本地，飞书同步成功', feishuUrl);
+          this.showSuccess('已保存到本地，飞书同步失败');
         }
       } else {
         // 没有配置API，直接本地保存
@@ -655,43 +652,6 @@ class BookmarkPopup {
     // }, 3000);
   }
 
-  showSuccessWithLink(message = '收藏成功！', feishuUrl) {
-    document.getElementById('formContainer').style.display = 'none';
-    document.getElementById('resultContainer').style.display = 'block';
-
-    const successContainer = document.getElementById('resultSuccess');
-    successContainer.style.display = 'block';
-
-    // 更新成功消息，添加飞书链接
-    successContainer.innerHTML = `
-      <div class="success-icon">✅</div>
-      <h3>收藏成功！</h3>
-      <p>${message}</p>
-      <a href="${feishuUrl}" target="_blank" class="btn-feishu" style="
-        display: inline-block;
-        background: #0066ff;
-        color: white;
-        text-decoration: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        margin: 10px 0;
-        font-size: 14px;
-      ">📋 打开飞书表格</a>
-      <br>
-      <button type="button" id="viewHistoryBtn" class="btn-link">
-        查看历史记录
-      </button>
-    `;
-
-    // 打开设置页并跳到历史标签
-    const btn = document.getElementById('viewHistoryBtn');
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const url = browserAPI.runtime.getURL('options/options.html#history');
-        browserAPI.tabs.create({ url });
-      });
-    }
-  }
 
   showError(message) {
     document.getElementById('formContainer').style.display = 'none';
@@ -708,17 +668,6 @@ class BookmarkPopup {
     browserAPI.runtime.openOptionsPage();
   }
 
-  async openFeishuTable() {
-    try {
-      const config = await StorageManager.getConfig();
-      if (config.baseId && config.tableId) {
-        const tableUrl = `https://x6upmg45zs.feishu.cn/base/${config.baseId}?table=${config.tableId}`;
-        browserAPI.tabs.create({ url: tableUrl });
-      }
-    } catch (error) {
-      console.error('打开飞书表格失败:', error);
-    }
-  }
 
   async testApiConnection() {
     console.log('🚀 开始测试飞书API连接...');
