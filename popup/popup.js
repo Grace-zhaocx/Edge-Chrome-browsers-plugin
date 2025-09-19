@@ -425,21 +425,39 @@ class BookmarkPopup {
           });
           
           console.log('收到飞书API响应:', response);
-          
-          if (response?.error) {
-            throw new Error(response?.error);
+
+          // 详细的错误处理
+          if (response?.error || response?.data?.code !== 0) {
+            const errorCode = response?.data?.code || 'unknown';
+            const errorMsg = response?.data?.msg || response?.error || '未知错误';
+
+            console.error('❌ 飞书API调用失败:', {
+              code: errorCode,
+              message: errorMsg,
+              fullResponse: response
+            });
+
+            // 根据错误码提供具体建议
+            let suggestion = '';
+            switch (errorCode) {
+              case 91403:
+                suggestion = '权限不足：请检查飞书应用是否有多维表格的写入权限，并确认Base ID和Table ID正确';
+                break;
+              case 99991663:
+                suggestion = '记录不存在：请检查Table ID是否正确';
+                break;
+              case 99991401:
+                suggestion = 'Token无效：请重新配置App ID和App Secret';
+                break;
+              default:
+                suggestion = '请检查飞书应用配置和表格权限';
+            }
+
+            throw new Error(`${errorMsg} (错误码: ${errorCode})\n建议: ${suggestion}`);
           }
 
-          console.log('🎉 飞书API响应:', response);
-
-          if (response?.success !== false && !response?.error) {
-            console.log('✅ 数据成功写入飞书表格！');
-            // 飞书API保存成功
-            this.showSuccess('已同步到飞书多维表格');
-          } else {
-            console.error('❌ 飞书API调用虽然有响应，但可能失败:', response);
-            throw new Error(response?.error || '未知的API响应错误');
-          }
+          console.log('🎉 飞书API调用成功:', response);
+          this.showSuccess('已同步到飞书多维表格');
           
         } catch (apiError) {
           console.warn('飞书API保存失败，改为本地保存:', apiError);
@@ -526,8 +544,11 @@ class BookmarkPopup {
       
       // 处理不同类型的字段
       if (key === '网站地址') {
-        // URL字段直接使用字符串格式
-        formatted[key] = value;
+        // URL字段需要链接对象格式（飞书链接字段要求）
+        formatted[key] = {
+          text: value,
+          link: value
+        };
       } else if (key === '网站标签') {
         // 多选字段，直接发送数组
         if (Array.isArray(value)) {
